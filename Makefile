@@ -38,12 +38,16 @@ IO_ASM_SRC = ./src/io/io.s
 IO_ASM_OBJ = ./build/io/io.o
 IO_OBJ_FILES = $(IO_ASM_OBJ)
 
+PIC_SRC = ./src/8259_PIC/pic.c
+PIC_OBJ = ./build/8259_PIC/pic.o
+PIC_OBJ_FILES = $(PIC_OBJ)
 
-GENERATED_FILES += $(KERNEL_CFILES_OBJS) $(DISPLAY_OBJ_FILES) $(MEMORY_OBJ_FILES) $(IDT_OBJ_FILES) $(IO_OBJ_FILES)
+
+GENERATED_FILES += $(KERNEL_CFILES_OBJS) $(DISPLAY_OBJ_FILES) $(MEMORY_OBJ_FILES) $(IDT_OBJ_FILES) $(IO_OBJ_FILES) $(PIC_OBJ_FILES)
 
 KERNEL_OBJECT_FILES_TO_GET_BIN := $(KERNEL_OBJFILE) $(KERNEL_CFILES_OBJS) \
 	$(DISPLAY_OBJ_FILES) $(MEMORY_OBJ_FILES) $(IDT_OBJ_FILES) \
-	$(IO_OBJ_FILES) # for now
+	$(IO_OBJ_FILES) $(PIC_OBJ_FILES)# for now
 
 all: build_folder_setup $(BOOT_OBJFILE) $(KERNEL_BINFILE)
 	rm -f $(OS_BINFILE)
@@ -81,6 +85,8 @@ $(IDT_ASM_OBJ): $(IDT_ASM_SRC)
 $(IO_ASM_OBJ): $(IO_ASM_SRC)
 	nasm -f elf $< -o $@
 
+$(PIC_OBJ): $(PIC_SRC)
+	i686-elf-gcc $(INCLUDES) $(FLAGS) -std=gnu99   -c $< -o $@
 
 run: $(BOOT_OBJFILE)
 	qemu-system-x86_64 -hda $<
@@ -95,6 +101,7 @@ build_folder_setup:
 	mkdir -p build/display
 	mkdir -p build/idt
 	mkdir -p build/memory
+	mkdir -p build/8259_PIC
 
 re: clean all
 

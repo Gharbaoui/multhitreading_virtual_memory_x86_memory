@@ -24,3 +24,4 @@ extern void idt_load(interrupt_descriptor_table_register*);
 void set_interrupt_descriptor(uint16_t idt_number, void *function_address);
 void idt_zero();
 void idt_init(void);
+extern void enable_interrupts();

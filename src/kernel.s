@@ -19,11 +19,7 @@ _start:
   out 0x92, al
 
   call kernel_main
-  call test
   hlt
   jmp $
-
-test:
-  ret
 
 times 512-($-$$) db 0
