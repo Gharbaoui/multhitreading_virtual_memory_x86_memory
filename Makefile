@@ -12,7 +12,7 @@ OS_BINFILE = ./bin/os.bin
 GENERATED_FILES := $(BOOT_OBJFILE) $(KERNEL_OBJFILE) $(KERNEL_BINFILE) $(OS_BINFILE)
 INTERMEDIAT_FILES := ./build/kernelfull.o
 
-INCLUDES = -I./src
+INCLUDES = -I./src -I./src/memory
 KERNEL_CFILES_OBJS = ./build/kernel.o
 KERNEL_CFILES = ./src/kernel.c
 FLAGS = -g -ffreestanding -falign-jumps -falign-functions -falign-labels -falign-loops -fstrength-reduce \
@@ -26,6 +26,13 @@ DISPLAY_OBJ_FILES =  $(DISPLAY_CHAR_PRINT_OBJ)
 MEMORY_SRC = ./src/memory/memory.c
 MEMORY_OBJ = ./build/memory/memory.o
 MEMORY_OBJ_FILES =  $(MEMORY_OBJ)
+
+HEAP_SRC = ./src/memory/heap/heap.c
+KERNEL_HEAP_SRC = ./src/memory/heap/kernel_heap.c
+HEAP_OBJ = ./build/memory/heap/heap.o
+KERNEL_HEAP_OBJ = ./build/memory/heap/kernel_heap.o
+MEMORY_OBJ_FILES += $(HEAP_OBJ) $(KERNEL_HEAP_OBJ)
+
 
 IDT_C_SRC = ./src/idt/idt.c
 IDT_C_OBJ = ./build/idt/idt.o
@@ -76,6 +83,12 @@ $(DISPLAY_CHAR_PRINT_OBJ): $(DISPLAY_CHAR_PRINT_SRC)
 $(MEMORY_OBJ): $(MEMORY_SRC)
 	i686-elf-gcc $(INCLUDES) $(FLAGS) -std=gnu99   -c $< -o $@
 
+$(HEAP_OBJ): $(HEAP_SRC)
+	i686-elf-gcc $(INCLUDES) $(FLAGS) -std=gnu99   -c $< -o $@
+	
+$(KERNEL_HEAP_OBJ): $(KERNEL_HEAP_SRC)
+	i686-elf-gcc $(INCLUDES) $(FLAGS) -std=gnu99   -c $< -o $@
+
 $(IDT_C_OBJ): $(IDT_C_SRC)
 	i686-elf-gcc $(INCLUDES) $(FLAGS) -std=gnu99   -c $< -o $@
 
@@ -101,6 +114,7 @@ build_folder_setup:
 	mkdir -p build/display
 	mkdir -p build/idt
 	mkdir -p build/memory
+	mkdir -p build/memory/heap
 	mkdir -p build/8259_PIC
 
 re: clean all

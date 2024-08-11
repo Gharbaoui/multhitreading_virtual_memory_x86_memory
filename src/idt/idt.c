@@ -60,8 +60,8 @@ void idt_init(void)
     }
 
     set_interrupt_descriptor(0, idt_zero);
-    set_interrupt_descriptor(0x20, int20h_int);
-    set_interrupt_descriptor(0x21, int21h_int);
+    // set_interrupt_descriptor(0x20, int20h_int);
+    // set_interrupt_descriptor(0x21, int21h_int);
     // we are passing &idtr, because lidt takes pointer the structure that holds limit and base
     // and not the value
     idt_load(&idtr);

@@ -1,7 +1,0 @@
-#pragma once
-
-#define KERNEL_CODE_SELECTOR 0x8 // look at GDT
-#define KERNEL_DATA_SELECTOR 0x10
-
-
-#define INTERRUPT_DESCRIPTOR_TABLE_SIZE 512
