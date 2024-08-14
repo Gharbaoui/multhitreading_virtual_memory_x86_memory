@@ -26,7 +26,7 @@ static int blocks_required_to_satisfy_size(size_t size)
 {
     if (size % KERNEL_BLOCK_SIZE_IN_BYTES == 0)
     {
-        return size;
+        return size / KERNEL_BLOCK_SIZE_IN_BYTES;
     }
     // int num_of_bytes = ((size - (size % KERNEL_BLOCK_SIZE_IN_BYTES)) + KERNEL_BLOCK_SIZE_IN_BYTES);
     return ((size - (size % KERNEL_BLOCK_SIZE_IN_BYTES)) + KERNEL_BLOCK_SIZE_IN_BYTES) / KERNEL_BLOCK_SIZE_IN_BYTES;
