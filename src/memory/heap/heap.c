@@ -81,3 +81,39 @@ static void mark_entries_taken(heap_table_t* table, int start_index, int number_
         ++i;
     }
 }
+
+
+static int address_to_entry_index(void *relative_address)
+{
+    return (unsigned int)relative_address / KERNEL_BLOCK_SIZE_IN_BYTES;
+}
+
+
+
+void heap_free(heap_t *heap, void* ptr)
+{
+    int index;
+    heap_table_t *table;
+    
+    index = address_to_entry_index((void*)(ptr - heap->memory_start_address));
+    table = heap->table;
+
+    table->entries[index] = 0; // reset
+    table->entries[index] = HEAP_BLOCK_TABLE_ENTRY_FREE; // just in case we change the macro to non-zero value
+    ++index;
+    while (
+        (GET_ENTRY_TYPE(table->entries[index])) == HEAP_BLOCK_TABLE_ENTRY_TAKEN &&
+        (ENTRY_HAS_IS_FIRST_FLAG(table->entries[index])) == 0
+    )
+    {
+        if((ENTRY_HAS_NEXT_FLAG(table->entries[index])) == 1)
+        {
+            table->entries[index] = 0;
+            table->entries[index] = HEAP_BLOCK_TABLE_ENTRY_FREE;
+            ++index;
+            continue;
+        }
+        table->entries[index] = 0;
+        table->entries[index] = HEAP_BLOCK_TABLE_ENTRY_FREE;
+    }
+}

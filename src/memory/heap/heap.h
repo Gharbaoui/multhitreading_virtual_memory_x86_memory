@@ -12,6 +12,8 @@
 #define HEAP_BLOCK_IS_FIRST 0b01000000
 
 #define GET_ENTRY_TYPE(type) type & 0xf
+#define ENTRY_HAS_NEXT_FLAG(type) ((type & 0b10000000) != 0)
+#define ENTRY_HAS_IS_FIRST_FLAG(type) ((type & 0b01000000) != 0)
 
 typedef uint8_t HEAP_BLOCK_TABLE_ENTRY;
 
@@ -29,3 +31,5 @@ typedef struct heap_s {
 int heap_create(heap_table_t* heap_table, void* saddr, void* end, heap_t* heap);
 static void mark_entries_taken(heap_table_t* table, int start_index, int number_of_entries);
 void* heap_malloc(heap_t *heap, size_t size);
+static int address_to_entry_index(void *relative_address);
+void heap_free(heap_t *heap, void* ptr);

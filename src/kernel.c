@@ -28,11 +28,13 @@ void kernel_main(void)
     enable_interrupts();
 
     void* p1 = kmalloc(50);
-    void* p2 = kmalloc(5000);
+    void* p2 = kmalloc(4096*5);
     void* p3 = kmalloc(100);
-    void* p4 = kmalloc(4096*4 + 50); // so it would require 5 blocks
+    kfree(p2);
+    void *p4 = kmalloc(100);
+    kfree(p4);
+    void *p5 = kmalloc(5000); // this to test malloc
 
-    if(p1 || p2 || p3 || p4)
-    {}
+    if (p1 || p2 || p3 || p4 || p5) {}
 
 }
